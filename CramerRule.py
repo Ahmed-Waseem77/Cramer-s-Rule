@@ -2,13 +2,6 @@
 import numpy as np
 from scipy import linalg
 
-#linalg.det determinant of a mat
-#linalg.inv inverse of a mat
-#linalg.pinv calculate pseudo inverse
-
-
-
-
 #user input of matrix size
 x = input("enter number of rows: \n")
 y = input("enter number of columns: \n")
@@ -35,34 +28,25 @@ for i in range (rows):
     for j in range (columns-1):
         A_Coeffs[i][j] = A_LEs[i][j]
 
-print(A_LEs)
-print(A_Coeffs)
-print(A_const)
-
 #checking if matrix is invertible
-
-#definition of a swap function for columns
-def Swap(arr, start_index, last_index):
-    arr[:, [start_index, last_index]] = arr[:, [last_index, start_index]]
-
 detA_Coeffs = np.linalg.det(A_Coeffs)
 print("coeffeicient matrix determinant: "+str(detA_Coeffs)+"\n")
 if detA_Coeffs == 0:
     print("matrix is not invertible, cant compute solution")
+
+#if det is not zero compute determinants for each Dx, Dy, .. Dn
 else:
-    #extracting determinant N from temp where it holds D_n matrix
-    temp = A_LEs
+    #double loop to replace A_detn columns with constant column
+
     for i in range(columns-1):
-        Swap(temp, i, -1)
-        A_detn = A_Coeffs
-        for j in range (rows):
-            A_detn[j][i] = temp[j][i]
+        A_detn = np.copy(A_Coeffs)
+        for j in range(rows):
+            A_detn[j][i] = A_const[j][0]
+
+        #finding and printing solutions
         print("solution for variable: "+str(i+1))
         detA_n = np.linalg.det(A_detn)
-
-        #iffy on this 
-        if i%2 != 0:
-            detA_n *= -1
+        print(A_detn)
 
         solution_n = detA_n/detA_Coeffs
         print(str(solution_n))
